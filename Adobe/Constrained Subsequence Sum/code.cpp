@@ -38,3 +38,88 @@ public:
         else return ans ;
     }
 };
+
+//Bottom Up
+class Solution {
+public:
+    int constrainedSubsetSum(vector<int>& nums, int k) 
+    {
+        int n = nums.size() ;
+        
+        vector<int> dp(n, 0) ;
+        
+        for(int i = 0 ; i < n ; i++ )
+            dp[i] = nums[i] ;
+        
+        int res = dp[0] ;
+        
+        for(int i = 1 ; i < n ; i++ ) 
+        {
+            for( int j = i-1 ; i-j <= k && j >= 0 ; j-- ) 
+            {
+                dp[i] = max( dp[i], nums[i] + dp[j] ) ;
+            }
+            res = max( res, dp[i] ) ;
+        }
+        return res ;
+    }
+};
+
+
+//Approach-4 - Priority_queue
+
+ // REDUCING THE TC BY USING PRIORITY QUEUE INSTEAD OF INNER LOOP 
+
+class Solution {
+public:
+    
+
+    int constrainedSubsetSum(vector<int>& nums, int k) 
+    {
+        int n = nums.size() ;
+        
+        
+        vector<int> dp(n, 0) ;
+        dp = nums ;
+        
+        priority_queue<pair<int, int>, vector<pair<int, int>>> pq ;
+        
+        pq.push( {dp[0], 0} ) ;
+        
+        int res = dp[0] ;
+        
+        for( int i = 1 ; i < n ; i++ )
+        {
+            
+            while( !pq.empty() && pq.top().second < i - k ) 
+                pq.pop();
+                
+            
+            dp[i] = max( dp[i], nums[i] + pq.top().first ) ;
+            
+            pq.push( {dp[i], i} ) ;
+            
+            res = max( res, dp[i] ) ;
+        }
+        return res ;
+    }
+};
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
